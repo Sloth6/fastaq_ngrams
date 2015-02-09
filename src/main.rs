@@ -22,19 +22,6 @@ impl Nucleotide {
   }
 }
 
-// type DNA = Vec<Nucleotide>;
-
-// impl DNA {
-//   fn stringify(&self) -> String {
-//     let mut s = "<".to_string();
-//     for n in self.iter() {
-//       s.push_str(&*n.stringify())
-//     }
-//     s.push_str(">");
-//     s
-//   }
-// }
-
 struct Record {
   name: String,
   seq: Vec<Nucleotide>,
@@ -118,7 +105,7 @@ fn main() {
       for j in range(i, i+k) {
         subseq.push((*record).seq[j].clone());
       }
-      let mut fuck = false;
+      let mut not_seen = false;
       match n_grams.get_mut(&subseq) {
         Some(n) => {
           *n += 1;
@@ -127,64 +114,18 @@ fn main() {
           }
         },
         None => {
-          fuck = true;
+          not_seen = true;
         },
       }
-      if fuck == true {
+      if not_seen == true {
         n_grams.insert(subseq, 1);
       } 
     }
   }
   println!("{:?}", max);
   for (k, v) in n_grams.drain() {
-    if v > 2000 {
+    if v > 5 {
       println!("{:?}{:?}", dna_to_String(&k), v );  
     }
   }  
 }
-      // println!("  {:?}", subRecord.stringify());
-
-// fn levenshtein_distance(word1: &str, word2: &str) -> uint {
-//   let word1_length = word1.len();
-//   let word2_length = word2.len();
- 
-//   let mut matrix : Vec<Vec<uint>> = vec![vec![]];
- 
-//   for i in range(1, word1_length+1) { matrix[0].push(i); }
-//   for j in range(1, word2_length+1) { matrix.push(vec![j]); }
-
-
-//   for j in range(1, word2_length) {
-//     for i in range(1, word1_length) {
-//       let x: uint = if word1.char_at(i) == word2.char_at(j) {
-//         matrix[j-1][i-1]
-//       }
-//       else {
-//         let min_distance = [matrix[j][i-1], matrix[j-1][i], matrix[j-1][i-1]];
-//         *min_distance.iter().min().unwrap() + 1
-//       };
- 
-//       matrix[j].push(x);
-//     }
-//   }
- 
-//   matrix[word2_length-1][word1_length-1]
-// }
-
-// fn distance_matrix(seqs: Vec<Record>) -> Vec<Vec<uint>> {
-//  let mut matrix : Vec<Vec<uint>> = vec![vec![]];
-//  let n = seqs.len();
-
-//  for _ in range(1, n) {
-//    matrix.push(vec![]);
-//  }
-  
-//  for i in range(0, n) {
-//    for j in range(0, i+1) {
-//      let d = levenshtein_distance(&seqs[i].seq, &seqs[j].seq);
-//      matrix[i].push(d);
-//    }
-//  }
-
-//  return matrix;
-// }
