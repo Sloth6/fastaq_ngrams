@@ -22,18 +22,18 @@ impl Nucleotide {
   }
 }
 
-type DNA = Vec<Nucleotide>;
+// type DNA = Vec<Nucleotide>;
 
-impl DNA {
-  fn stringify(&self) -> String {
-    let mut s = "<".to_string();
-    for n in self.iter() {
-      s.push_str(&*n.stringify())
-    }
-    s.push_str(">");
-    s
-  }
-}
+// impl DNA {
+//   fn stringify(&self) -> String {
+//     let mut s = "<".to_string();
+//     for n in self.iter() {
+//       s.push_str(&*n.stringify())
+//     }
+//     s.push_str(">");
+//     s
+//   }
+// }
 
 struct Record {
   name: String,
@@ -61,7 +61,7 @@ fn dna_to_String(DNA: &Vec<Nucleotide>) -> String {
   s
 }
 
-fn load_fastq(path: String) -> Vec<Record> {
+fn load_fastq(n: usize, path: String) -> Vec<Record> {
   let path = Path::new(path);
 
   // Open the path in read-only mode, returns `IoResult<File>`
@@ -95,7 +95,7 @@ fn load_fastq(path: String) -> Vec<Record> {
           }
         }
         sequences.push(Record { name: name, seq: nuc_seq });
-        if sequences.len() >= 1000000 {
+        if sequences.len() >= n {
           break;
         }
       },
@@ -107,10 +107,9 @@ fn load_fastq(path: String) -> Vec<Record> {
 }
 
 fn main() {
-  
-  // let sequences = load_fastq("./src/test.fastq".to_string());
-  let sequences = load_fastq("/Users/joelsimon/Documents/Immufind/Seq Clustering/data/SRR015423_1.filt.fastq".to_string());
   let k: usize = 20;
+  let n: usize = 100_000;
+  let sequences = load_fastq(n, "/Users/joelsimon/Documents/Immufind/Seq Clustering/data/SRR015423_1.filt.fastq".to_string());
   let mut n_grams: HashMap<Vec<Nucleotide>, usize> = HashMap::new();
   let mut max: usize = 0;
   for record in sequences.iter() {
